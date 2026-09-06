@@ -787,7 +787,7 @@ const SERVICES = [
 
 function Services() {
   return (
-    <section className="section-shell py-24 lg:py-32" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+    <section id="capabilities" className="section-shell py-24 lg:py-32" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
       <Container>
         <Reveal>
           <SectionLabel num="05" label="What I Bring" />
@@ -1012,15 +1012,37 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    const ids = ['home', 'about', 'projects', 'skills', 'experience', 'contact']
+    const sections = [
+      { id: 'home', navSection: 'home' },
+      { id: 'about', navSection: 'about' },
+      { id: 'projects', navSection: 'projects' },
+      { id: 'skills', navSection: 'skills' },
+      { id: 'experience', navSection: 'experience' },
+      // This section has no dedicated nav item, so it continues the Experience state.
+      { id: 'capabilities', navSection: 'experience' },
+      { id: 'contact', navSection: 'contact' },
+    ].flatMap(({ id, navSection }) => {
+      const element = document.getElementById(id)
+      return element ? [{ element, navSection }] : []
+    })
+
+    const updateActiveSection = () => {
+      const activationLine = window.innerHeight * 0.35
+      const current = sections
+        .filter(({ element }) => element.getBoundingClientRect().top <= activationLine)
+        .at(-1)
+
+      setActiveSection(current?.navSection ?? 'home')
+    }
+
     const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-        if (visible) setActiveSection(visible.target.id)
-      },
-      { rootMargin: '-35% 0px -55% 0px', threshold: [0.1, 0.4, 0.7] },
+      updateActiveSection,
+      { rootMargin: '-15% 0px -65% 0px', threshold: 0 },
     )
-    ids.forEach((id) => document.getElementById(id) && observer.observe(document.getElementById(id)!))
+
+    sections.forEach(({ element }) => observer.observe(element))
+    updateActiveSection()
+
     return () => observer.disconnect()
   }, [activeProject])
 
