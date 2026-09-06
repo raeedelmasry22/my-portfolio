@@ -1,0 +1,11 @@
+{
+  "title": "Raeed Youssef — AI Student & UI/UX Designer",
+  "description": "Portfolio of Raeed Youssef, an AI student and UI/UX designer exploring intelligent products, computer vision, and thoughtful digital experiences.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}
