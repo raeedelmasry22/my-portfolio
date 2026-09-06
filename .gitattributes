@@ -4,7 +4,9 @@
 # ---------------------------------------------------------------------------
 # Images & Graphics
 # ---------------------------------------------------------------------------
-*.png                filter=lfs diff=lfs merge=lfs -text
+# Portfolio PNGs are bundled by Vite and must be present as regular Git blobs
+# for Vercel's build environment; do not route them through Git LFS.
+*.png                -filter -diff -merge -text
 *.jpg                filter=lfs diff=lfs merge=lfs -text
 *.jpeg               filter=lfs diff=lfs merge=lfs -text
 *.gif                filter=lfs diff=lfs merge=lfs -text
