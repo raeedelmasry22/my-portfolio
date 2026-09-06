@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import type { AnyProject, AIProject, UXProject } from './data/projects'
 
 // ─── Shared Primitives ────────────────────────────────────────────────────────
@@ -63,6 +63,40 @@ function Placeholder({
         )}
       </div>
     </div>
+  )
+}
+
+function ProjectScreensCarousel({ project, screens }: { project: UXProject; screens: string[] }) {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const screenGroups = [
+    { title: 'Onboarding & Authentication', description: 'A smooth and engaging onboarding experience to get users started on their travel journey.' },
+    { title: 'Discovery & Booking', description: 'Explore destinations, book hotels and flights, and discover tour packages.' },
+    { title: 'Trip Management & Account', description: 'Keep track of trips, notifications, and travel preferences with ease.' },
+  ]
+  const activeGroup = screenGroups[activeIndex]
+  const move = (direction: number) => setActiveIndex((current) => (current + direction + screens.length) % screens.length)
+
+  return (
+    <section className="tripgo-gallery mb-10" aria-label={`${project.title} screens gallery`}>
+      <div className="tripgo-gallery-stage">
+        <button type="button" className="tripgo-gallery-arrow prev" onClick={() => move(-1)} aria-label="Previous screen group">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="m11 3-6 6 6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </button>
+        <div className="tripgo-gallery-frame case-study-visual">
+          <img src={screens[activeIndex]} alt={`${project.title} — ${activeGroup.title}`} />
+        </div>
+        <button type="button" className="tripgo-gallery-arrow next" onClick={() => move(1)} aria-label="Next screen group">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true"><path d="m7 3 6 6-6 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+        </button>
+      </div>
+      <div className="tripgo-gallery-copy">
+        <span>{String(activeIndex + 1).padStart(2, '0')}</span>
+        <div><h3>{activeGroup.title}</h3><p>{activeGroup.description}</p></div>
+      </div>
+      <div className="tripgo-gallery-dots" role="tablist" aria-label="TripGo screen groups">
+        {screens.map((_, index) => <button key={index} type="button" role="tab" aria-label={`Show screen group ${index + 1}`} aria-selected={index === activeIndex} className={index === activeIndex ? 'active' : ''} onClick={() => setActiveIndex(index)} />)}
+      </div>
+    </section>
   )
 }
 
@@ -160,7 +194,7 @@ function AIProjectDetail({
   onNavigate: (slug: string) => void
 }) {
   return (
-    <div className="pt-28 pb-20 page-in" style={{ background: '#07090F', minHeight: '100vh' }}>
+    <div className="case-study case-study-ai pt-28 pb-20 page-in" style={{ background: '#07090F', minHeight: '100vh' }}>
       <Container>
         {/* Back button */}
         <button
@@ -175,7 +209,7 @@ function AIProjectDetail({
         </button>
 
         {/* Header */}
-        <div className="mb-12">
+        <div className="case-study-header mb-12">
           <div className="flex flex-wrap items-center gap-3 mb-4">
             <div
               className="px-3 py-1 rounded-full text-[11px] font-semibold"
@@ -401,7 +435,7 @@ function UXProjectDetail({
     : '42,130,255'
 
   return (
-    <div className="pt-28 pb-20 page-in" style={{ background: '#07090F', minHeight: '100vh' }}>
+    <div className="case-study case-study-ux pt-28 pb-20 page-in" style={{ background: '#07090F', minHeight: '100vh' }}>
       <Container>
         {/* Back */}
         <button
@@ -416,7 +450,7 @@ function UXProjectDetail({
         </button>
 
         {/* Header */}
-        <div className="mb-12">
+        <div className="case-study-header mb-12">
           <div className="flex flex-wrap items-center gap-3 mb-4">
             <div
               className="px-3 py-1 rounded-full text-[11px] font-semibold"
@@ -492,7 +526,7 @@ function UXProjectDetail({
 
         {/* Hero Screenshot — large premium showcase */}
         <div
-          className="relative w-full rounded-2xl overflow-hidden mb-12"
+          className="case-study-visual relative w-full rounded-2xl overflow-hidden mb-12"
           style={{ background: '#0B0D1A', border: '1px solid rgba(255,255,255,0.06)' }}
         >
           <img
@@ -608,7 +642,7 @@ function UXProjectDetail({
           <MonoLabel color="#9696B0">07–08 — VISUAL DIRECTION & FINAL UI</MonoLabel>
         </div>
         <div
-          className="relative w-full rounded-2xl overflow-hidden mb-10"
+          className={project.gallerySrc ? 'hidden' : 'case-study-visual relative w-full rounded-2xl overflow-hidden mb-10'}
           style={{ background: '#0B0D1A', border: '1px solid rgba(255,255,255,0.06)' }}
         >
           <img
@@ -617,6 +651,8 @@ function UXProjectDetail({
             style={{ width: '100%', display: 'block', objectFit: project.platform === 'mobile' ? 'contain' : 'cover', maxHeight: '460px' }}
           />
         </div>
+
+        {project.gallerySrc && <ProjectScreensCarousel project={project} screens={project.gallerySrc} />}
 
         {/* 09 Key Features */}
         <div

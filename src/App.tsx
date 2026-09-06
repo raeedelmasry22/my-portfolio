@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, type ReactNode } from 'react'
+import { useState, useEffect, useRef, type FormEvent, type ReactNode } from 'react'
 import logoSrc from '@/imports/5be9a558-7a91-4a2e-888c-efb446ccc15f.png'
 import photoSrc from '@/imports/1ae852fd-2288-4e35-a757-414a1d7efedd.png'
 import ProjectDetail from './ProjectDetail'
@@ -365,9 +365,10 @@ function ProjectThumb({ project }: { project: AnyProject }) {
 // ─── Navigation ───────────────────────────────────────────────────────────────
 
 function Nav({
-  scrolled, menuOpen, setMenuOpen, onLogoClick,
+  scrolled, activeSection, menuOpen, setMenuOpen, onLogoClick,
 }: {
   scrolled: boolean
+  activeSection: string
   menuOpen: boolean
   setMenuOpen: (v: boolean) => void
   onLogoClick: () => void
@@ -375,7 +376,7 @@ function Nav({
   const links = ['About', 'Projects', 'Skills', 'Experience', 'Contact']
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      className="modern-nav fixed top-0 left-0 right-0 z-50 transition-all duration-300"
       style={{
         background: scrolled ? 'rgba(7,9,15,0.92)' : 'transparent',
         backdropFilter: scrolled ? 'blur(14px)' : 'none',
@@ -389,7 +390,7 @@ function Nav({
           </button>
           <nav className="hidden md:flex items-center gap-7">
             {links.map(l => (
-              <a key={l} href={`#${l.toLowerCase()}`} className="nav-link text-sm font-medium" style={{ color: '#636380', textDecoration: 'none' }}>
+              <a key={l} href={`#${l.toLowerCase()}`} className={`nav-link text-sm font-medium ${activeSection === l.toLowerCase() ? 'active' : ''}`} style={{ color: activeSection === l.toLowerCase() ? '#E8E8F2' : '#636380', textDecoration: 'none' }}>
                 {l}
               </a>
             ))}
@@ -440,7 +441,7 @@ function Nav({
 
 function Hero() {
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden pt-16" style={{ background: '#07090F' }}>
+    <section id="home" className="hero-section relative min-h-screen flex items-center overflow-hidden pt-16" style={{ background: '#07090F' }}>
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -451,7 +452,7 @@ function Hero() {
       />
       <Container className="relative z-10 py-20 lg:py-24">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
-          <div>
+          <div className="hero-copy">
             <div className="hero-badge inline-flex items-center gap-2 mb-8">
               <div
                 className="px-3 py-1.5 rounded-full flex items-center gap-2 text-xs"
@@ -461,7 +462,7 @@ function Hero() {
                 Open to opportunities
               </div>
             </div>
-            <h1 className="hero-headline text-5xl md:text-6xl xl:text-7xl leading-[1.06] mb-6 font-bold tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: '#E8E8F2' }}>
+            <h1 className="hero-headline text-5xl md:text-6xl xl:text-7xl leading-[1.02] mb-6 font-bold tracking-tight" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: '#E8E8F2' }}>
               Building{' '}<span className="text-gradient-blue">Intelligent</span><br />Products with<br />AI & Design.
             </h1>
             <p className="hero-sub text-base md:text-lg leading-relaxed mb-10 max-w-xl" style={{ color: '#636380' }}>
@@ -502,7 +503,7 @@ function About() {
     { label: 'Design', lines: ['UI/UX Design', 'Digital Product Design'], color: '#7B5EFA' },
   ]
   return (
-    <section id="about" className="py-24 lg:py-32" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+    <section id="about" className="section-shell py-24 lg:py-32" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
       <Container>
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-20">
           <div className="lg:col-span-4">
@@ -542,7 +543,7 @@ function About() {
             <div className="grid sm:grid-cols-3 gap-4">
               {cards.map((card, i) => (
                 <Reveal key={card.label} delay={150 + i * 80}>
-                  <div className="p-5 rounded-xl" style={{ background: '#0B0D1A', border: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div className="info-card p-5 rounded-xl" style={{ background: '#0B0D1A', border: '1px solid rgba(255,255,255,0.06)' }}>
                     <div className="flex items-center gap-1.5 mb-3">
                       <div className="w-1.5 h-1.5 rounded-full" style={{ background: card.color }} />
                       <span style={{ fontFamily: "'JetBrains Mono', monospace", color: card.color, fontSize: '10px', letterSpacing: '0.1em' }}>{card.label.toUpperCase()}</span>
@@ -570,7 +571,7 @@ function ProjectGrid({ projects, onProjectClick }: { projects: AnyProject[]; onP
         <Reveal key={project.slug} delay={i * 55}>
           <button
             onClick={() => onProjectClick(project.slug)}
-            className="card-hover rounded-xl overflow-hidden flex flex-col cursor-pointer h-full text-left w-full"
+            className="project-card card-hover rounded-xl overflow-hidden flex flex-col cursor-pointer h-full text-left w-full"
             style={{ background: '#0B0D1A', border: '1px solid rgba(255,255,255,0.06)', padding: 0 }}
           >
             <ProjectThumb project={project} />
@@ -617,7 +618,7 @@ function Projects({ onProjectClick }: { onProjectClick: (slug: string) => void }
   const aiProjects = filtered.filter((project) => project.type === 'ai')
 
   return (
-    <section id="projects" className="py-24 lg:py-32" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: '#0A0B14' }}>
+    <section id="projects" className="section-shell projects-section py-24 lg:py-32" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: '#0A0B14' }}>
       <Container>
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-14">
@@ -662,14 +663,14 @@ function Projects({ onProjectClick }: { onProjectClick: (slug: string) => void }
 
         {featured.length > 0 && (
           <div>
-            <h3 className="text-lg font-semibold mb-5" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: '#E8E8F2' }}>Featured Work</h3>
+            <h3 className="project-group-title text-lg font-semibold mb-5" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: '#E8E8F2' }}>Featured Work</h3>
             <ProjectGrid projects={featured} onProjectClick={onProjectClick} />
           </div>
         )}
 
         {aiProjects.length > 0 && (
           <div className={featured.length > 0 ? 'mt-16' : ''}>
-            <h3 className="text-lg font-semibold mb-5" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: '#E8E8F2' }}>AI &amp; Machine Learning</h3>
+            <h3 className="project-group-title technical-title text-lg font-semibold mb-5" style={{ fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif", color: '#E8E8F2' }}>AI &amp; Machine Learning</h3>
             <ProjectGrid projects={aiProjects} onProjectClick={onProjectClick} />
           </div>
         )}
@@ -689,7 +690,7 @@ const SKILLS: Record<string, { tags: string[]; color: string }> = {
 
 function Skills() {
   return (
-    <section id="skills" className="py-24 lg:py-32" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+    <section id="skills" className="section-shell py-24 lg:py-32" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
       <Container>
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
           <div className="lg:col-span-4">
@@ -703,7 +704,7 @@ function Skills() {
           <div className="lg:col-span-8 grid sm:grid-cols-2 gap-5">
             {Object.entries(SKILLS).map(([category, { tags, color }], i) => (
               <Reveal key={category} delay={i * 75}>
-                <div className="p-6 rounded-xl h-full" style={{ background: '#0B0D1A', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div className="skill-cluster p-6 rounded-xl h-full" style={{ background: '#0B0D1A', border: '1px solid rgba(255,255,255,0.06)' }}>
                   <div className="flex items-center gap-2 mb-4">
                     <div className="w-1.5 h-1.5 rounded-full" style={{ background: color }} />
                     <span style={{ fontFamily: "'JetBrains Mono', monospace", color, fontSize: '10px', letterSpacing: '0.1em' }}>{category.toUpperCase()}</span>
@@ -735,7 +736,7 @@ function Experience() {
     { period: '2023 — Present', title: 'Personal Learning & Experiments', org: 'Independent', desc: 'Exploring AI tools, building small Python projects, and keeping up with developments in machine learning and computer vision.', active: false },
   ]
   return (
-    <section id="experience" className="py-24 lg:py-32" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: '#0A0B14' }}>
+    <section id="experience" className="section-shell py-24 lg:py-32" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: '#0A0B14' }}>
       <Container>
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
           <div className="lg:col-span-4">
@@ -754,7 +755,7 @@ function Experience() {
                   <Reveal key={i} delay={i * 75}>
                     <div className="relative">
                       <div className="absolute -left-10 top-1.5 w-3 h-3 rounded-full" style={{ background: entry.active ? '#2A82FF' : 'rgba(42,130,255,0.2)', border: `2px solid ${entry.active ? 'rgba(42,130,255,0.45)' : 'rgba(42,130,255,0.1)'}`, boxShadow: entry.active ? '0 0 14px rgba(42,130,255,0.55)' : 'none' }} />
-                      <div className="p-6 rounded-xl" style={{ background: '#0B0D1A', border: entry.active ? '1px solid rgba(42,130,255,0.2)' : '1px solid rgba(255,255,255,0.06)' }}>
+                      <div className="timeline-card p-6 rounded-xl" style={{ background: '#0B0D1A', border: entry.active ? '1px solid rgba(42,130,255,0.2)' : '1px solid rgba(255,255,255,0.06)' }}>
                         <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
                           <span style={{ fontFamily: "'JetBrains Mono', monospace", color: '#2A82FF', fontSize: '11px', letterSpacing: '0.08em' }}>{entry.period}</span>
                           {entry.active && <span className="text-[10px] px-2 py-0.5 rounded-full" style={{ background: 'rgba(42,130,255,0.1)', color: '#2A82FF', fontFamily: "'JetBrains Mono', monospace", letterSpacing: '0.06em' }}>CURRENT</span>}
@@ -786,7 +787,7 @@ const SERVICES = [
 
 function Services() {
   return (
-    <section className="py-24 lg:py-32" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+    <section className="section-shell py-24 lg:py-32" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
       <Container>
         <Reveal>
           <SectionLabel num="05" label="What I Bring" />
@@ -797,7 +798,7 @@ function Services() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {SERVICES.map((s, i) => (
             <Reveal key={s.title} delay={i * 65}>
-              <div className="card-hover p-6 rounded-xl flex flex-col gap-4 h-full" style={{ background: '#0B0D1A', border: '1px solid rgba(255,255,255,0.06)' }}>
+              <div className="capability-card card-hover p-6 rounded-xl flex flex-col gap-4 h-full" style={{ background: '#0B0D1A', border: '1px solid rgba(255,255,255,0.06)' }}>
                 <div className="text-xl w-10 h-10 flex items-center justify-center rounded-lg" style={{ background: 'rgba(42,130,255,0.08)', color: s.color, border: '1px solid rgba(42,130,255,0.14)' }}>
                   {s.mark}
                 </div>
@@ -817,8 +818,37 @@ function Services() {
 // ─── Contact ──────────────────────────────────────────────────────────────────
 
 function Contact() {
+  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    if (status === 'submitting') return
+
+    setStatus('submitting')
+    const payload = new FormData()
+    payload.append('name', form.name)
+    payload.append('email', form.email)
+    payload.append('message', form.message)
+    payload.append('_replyto', form.email)
+
+    try {
+      const response = await fetch('https://formspree.io/f/xrpzpwnz', {
+        method: 'POST',
+        body: payload,
+        headers: { Accept: 'application/json' },
+      })
+
+      if (!response.ok) throw new Error('Form submission failed')
+      setForm({ name: '', email: '', message: '' })
+      setStatus('success')
+    } catch {
+      setStatus('error')
+    }
+  }
+
   return (
-    <section id="contact" className="py-28 lg:py-36" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: '#0A0B14' }}>
+    <section id="contact" className="contact-section py-28 lg:py-36" style={{ borderTop: '1px solid rgba(255,255,255,0.05)', background: '#0A0B14' }}>
       <Container>
         <div className="max-w-3xl mx-auto text-center">
           <Reveal>
@@ -846,6 +876,81 @@ function Contact() {
                 style={{ border: '1px solid rgba(255,255,255,0.1)', color: '#9696B0', textDecoration: 'none', fontSize: '15px' }}
               >
                 Get In Touch
+              </a>
+            </div>
+            <form className="contact-form mt-10 text-left" onSubmit={handleSubmit}>
+              <div className="grid sm:grid-cols-2 gap-4">
+                <label className="contact-field">
+                  <span>Name</span>
+                  <input
+                    type="text"
+                    name="name"
+                    value={form.name}
+                    onChange={(event) => setForm({ ...form, name: event.target.value })}
+                    autoComplete="name"
+                    required
+                  />
+                </label>
+                <label className="contact-field">
+                  <span>Email</span>
+                  <input
+                    type="email"
+                    name="email"
+                    value={form.email}
+                    onChange={(event) => setForm({ ...form, email: event.target.value })}
+                    autoComplete="email"
+                    required
+                  />
+                </label>
+              </div>
+              <label className="contact-field mt-4">
+                <span>Message</span>
+                <textarea
+                  name="message"
+                  value={form.message}
+                  onChange={(event) => setForm({ ...form, message: event.target.value })}
+                  rows={5}
+                  required
+                />
+              </label>
+              <div className="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <p className={`contact-status ${status}`} role="status" aria-live="polite">
+                  {status === 'success' && 'Thanks — your message has been sent.'}
+                  {status === 'error' && 'Something went wrong. Please try again.'}
+                  {status === 'submitting' && 'Sending your message…'}
+                </p>
+                <button
+                  type="submit"
+                  className="btn-primary contact-submit inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full font-semibold"
+                  style={{ background: '#2A82FF', color: '#fff', fontSize: '14px', border: 'none', cursor: status === 'submitting' ? 'wait' : 'pointer' }}
+                  disabled={status === 'submitting'}
+                >
+                  {status === 'submitting' ? 'Sending…' : 'Send Message'}
+                  {status !== 'submitting' && (
+                    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M2 7h10M8 3l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
+                  )}
+                </button>
+              </div>
+            </form>
+            <div className="contact-info-row mt-6" aria-label="Direct contact details">
+              <a
+                href="https://wa.me/201123641069"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="contact-info-item"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M20.52 3.48A11.84 11.84 0 0012.05 0C5.5 0 .17 5.33.17 11.88c0 2.1.55 4.15 1.6 5.95L.07 24l6.33-1.66a11.84 11.84 0 005.65 1.44h.01c6.55 0 11.88-5.33 11.88-11.88 0-3.17-1.23-6.14-3.42-8.42z" fill="currentColor" opacity=".18" />
+                  <path d="M17.17 14.9c-.28-.14-1.64-.81-1.9-.9-.25-.1-.44-.14-.62.14-.18.28-.71.9-.87 1.08-.16.18-.32.2-.6.07-1.64-.82-2.72-1.47-3.8-3.33-.29-.5.29-.46.83-1.54.1-.2.05-.37-.02-.52-.07-.14-.62-1.5-.85-2.05-.22-.54-.45-.46-.62-.47h-.53c-.18 0-.47.07-.72.35-.25.28-.94.92-.94 2.24 0 1.32.96 2.6 1.1 2.78.14.18 1.9 2.9 4.6 4.07.64.28 1.14.45 1.53.58.64.2 1.22.17 1.68.1.51-.08 1.64-.67 1.87-1.32.23-.65.23-1.2.16-1.32-.06-.12-.24-.18-.52-.32z" fill="currentColor" />
+                </svg>
+                <span>+20 1123641069</span>
+              </a>
+              <a href="mailto:raeedelmasry80@gmail.com" className="contact-info-item">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" strokeWidth="1.5" />
+                  <path d="m4 7 8 6 8-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>raeedelmasry80@gmail.com</span>
               </a>
             </div>
           </Reveal>
@@ -895,8 +1000,10 @@ function Footer() {
 
 export default function App() {
   const [scrolled, setScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState('home')
   const [menuOpen, setMenuOpen] = useState(false)
   const [activeSlug, setActiveSlug] = useState<string | null>(null)
+  const activeProject = activeSlug ? ALL_PROJECTS.find(p => p.slug === activeSlug) ?? null : null
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 48)
@@ -904,7 +1011,18 @@ export default function App() {
     return () => window.removeEventListener('scroll', handler)
   }, [])
 
-  const activeProject = activeSlug ? ALL_PROJECTS.find(p => p.slug === activeSlug) ?? null : null
+  useEffect(() => {
+    const ids = ['home', 'about', 'projects', 'skills', 'experience', 'contact']
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((entry) => entry.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
+        if (visible) setActiveSection(visible.target.id)
+      },
+      { rootMargin: '-35% 0px -55% 0px', threshold: [0.1, 0.4, 0.7] },
+    )
+    ids.forEach((id) => document.getElementById(id) && observer.observe(document.getElementById(id)!))
+    return () => observer.disconnect()
+  }, [activeProject])
 
   const handleProjectClick = (slug: string) => {
     setActiveSlug(slug)
@@ -929,6 +1047,7 @@ export default function App() {
     <div className="min-h-screen" style={{ background: '#07090F', color: '#E8E8F2' }}>
       <Nav
         scrolled={scrolled}
+        activeSection={activeSection}
         menuOpen={menuOpen}
         setMenuOpen={setMenuOpen}
         onLogoClick={() => { setActiveSlug(null); window.scrollTo({ top: 0, behavior: 'smooth' }) }}

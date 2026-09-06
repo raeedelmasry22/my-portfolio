@@ -5,6 +5,9 @@ import matchpointImg from '@/imports/Screenshot_2026-09-02_002850.png'
 import aylahImg from '@/imports/Screenshot_2026-09-02_002831.png'
 import tvImg from '@/imports/Screenshot_2026-09-02_002333.png'
 import shadyImg from '@/imports/Screenshot_2026-09-02_002627.png'
+import tripgoOnboardingImg from '@/imports/tripgo-onboarding.png'
+import tripgoBookingImg from '@/imports/tripgo-booking.png'
+import tripgoTripsImg from '@/imports/tripgo-trips.png'
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -44,6 +47,7 @@ export interface UXProject {
   color: string
   platform: 'mobile' | 'web'
   screenshotSrc: string
+  gallerySrc?: string[]
   overview: string
   challenge: string
   goals: string[]
@@ -303,7 +307,7 @@ export const UX_PROJECTS: UXProject[] = [
       'Deployed and live on Vercel',
     ],
     outcome: 'A live, deployed luxury automotive website that demonstrates editorial UI/UX design, Arabic RTL product thinking, and the ability to ship polished, production-ready web experiences.',
-    demoUrl: 'https://vera-beta-amber.vercel.app/vehicles/vera-s',
+    demoUrl: 'https://vera-beta-amber.vercel.app/',
   },
   {
     type: 'ux',
@@ -526,6 +530,52 @@ export const UX_PROJECTS: UXProject[] = [
     ],
     outcome: 'A live creative digital product that demonstrates versatility in design — from utility software to emotional, story-driven experiences. Proves that good UI/UX extends beyond apps and dashboards.',
     demoUrl: 'https://shadyfarha.vercel.app/',
+  },
+  {
+    type: 'ux',
+    id: '07',
+    slug: 'tripgo',
+    title: 'TripGo',
+    category: 'UI/UX / Mobile App',
+    filters: ['UI/UX', 'Mobile Apps'],
+    desc: 'A modern travel booking mobile app designed to make discovering destinations, booking hotels and flights, exploring tour packages, and managing trips simple and seamless.',
+    tech: ['Figma', 'Mobile UI/UX', 'Travel Booking', 'Information Architecture'],
+    color: '#1677E8',
+    platform: 'mobile',
+    screenshotSrc: tripgoBookingImg,
+    gallerySrc: [tripgoOnboardingImg, tripgoBookingImg, tripgoTripsImg],
+    overview: 'TripGo is a travel-focused mobile experience that brings destination discovery, hotel booking, flight search, tour packages, booking confirmation, trip management, notifications, and user profile management into one cohesive experience.',
+    challenge: 'Travel planning can become fragmented across multiple booking and trip-management flows. TripGo focuses on bringing the essential travel journey into a clear, intuitive mobile experience.',
+    goals: [
+      'Make destination discovery intuitive.',
+      'Simplify hotel and flight booking.',
+      'Present tour packages clearly.',
+      'Make trip management easy.',
+      'Maintain a consistent and clean mobile experience.',
+    ],
+    uxProcess: [
+      'Mapped the User Flow across discovery, booking, confirmation, and trip management.',
+      'Organized the Information Architecture around destinations, stays, flights, tours, and personal trips.',
+      'Created Wireframing foundations for the core booking and management screens.',
+      'Established a Visual Design direction with spacious layouts, destination imagery, and a blue primary accent.',
+      'Refined UI components for a consistent mobile experience across the app.',
+    ],
+    userFlow: [
+      'User opens TripGo and explores onboarding or destination discovery.',
+      'Browses hotels, flights, or tour packages.',
+      'Reviews destination and package details.',
+      'Completes a booking and receives confirmation.',
+      'Manages saved trips, notifications, profile, and travel preferences.',
+    ],
+    keyFeatures: [
+      'Onboarding and destination discovery',
+      'Hotel booking and flight search',
+      'Tour package and destination details',
+      'Booking confirmation and My Trips management',
+      'Notifications, user profile, and travel preferences',
+    ],
+    outcome: 'A cohesive mobile travel app design that brings discovery, booking, and ongoing trip management into one clear travel experience.',
+    figmaUrl: 'https://www.figma.com/design/RcVZTUlG98up5b6c2xih46/Untitled?node-id=0-1&t=57CPd9AeLUvs14Jf-1',
   },
 ]
 
